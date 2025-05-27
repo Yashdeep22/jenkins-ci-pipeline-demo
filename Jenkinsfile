@@ -1,6 +1,16 @@
 pipeline {
     agent any
 
+    tools {
+        // Ensure 'jdk21' is configured in Jenkins under "Global Tool Configuration"
+        jdk 'jdk21'
+    }
+
+    environment {
+        JAVA_HOME = "${tool 'jdk21'}"
+        PATH = "${env.JAVA_HOME}\\bin;${env.PATH}"
+    }
+
     stages {
         stage('Clean') {
             steps {
@@ -11,6 +21,7 @@ pipeline {
 
         stage('Checkout') {
             steps {
+                echo 'Cloning repository...'
                 git 'https://github.com/Yashdeep22/jenkins-ci-pipeline-demo.git'
             }
         }
@@ -18,15 +29,27 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Compiling Java file...'
-                sh 'javac Test.java'
+                bat 'javac Test.java'
             }
         }
 
         stage('Run') {
             steps {
                 echo 'Running Java program...'
-                sh 'java Test'
+                bat 'java Test'
             }
+        }
+    }
+
+    post {
+        success {
+            echo '✅ Build and execution successful!'
+        }
+        failure {
+            echo '❌ Build or execution failed.'
+        }
+        always {
+            echo 'Pipeline finished.'
         }
     }
 }
