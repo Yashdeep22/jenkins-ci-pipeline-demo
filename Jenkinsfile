@@ -1,11 +1,6 @@
 pipeline {
     agent any
 
-    tools {
-        // Ensure 'jdk21' is configured in Jenkins under "Global Tool Configuration"
-        jdk 'jdk21'
-    }
-
     environment {
         JAVA_HOME = "${tool 'jdk21'}"
         PATH = "${env.JAVA_HOME}\\bin;${env.PATH}"
